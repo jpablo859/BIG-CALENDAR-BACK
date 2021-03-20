@@ -13,7 +13,7 @@ const PORT = process.env.PORT;
 app.use(cors());
 
 //directorio público
-app.use( express.static('public') );
+app.use('/login', express.static('public') );
 
 //routes
 app.use(express.json());
