@@ -1,15 +1,11 @@
 const {response} = require('express');
-const bcrypt = require('bcryptjs');
 const Event = require('../models/Event.model');
-const {generateJWT} = require('../helpers/jwt');
-const { findOneAndUpdate } = require('../models/Event.model');
-
 
 const getEvents = async (req, res = response) => {
     
     try {
-
-        const events = await Event.find().populate('user', 'name');
+        const filter = {user:req.uid};
+        const events = await Event.find(filter).populate('user', 'name');
 
         return res.status(201).json({
             ok: true,
@@ -29,12 +25,12 @@ const createEvent = async (req, res = response) => {
 
         const event = new Event(req.body);
         event.user = req.uid;
-        const excec = await event.save();
+        const resp = await event.save();
 
         return res.status(201).json({
             ok: true,
             msg: 'evento creado',
-            excec
+            event: resp
         })
     } catch(err) {
         console.error(err)
@@ -56,7 +52,6 @@ const updateEvent = async (req, res = response) => {
             ...req.body,
             user: req.uid
         }
-        console.log(filter, update)
         const event = await Event.findOneAndUpdate(filter,update);
 
         if (!event) return res.status(404).json({
