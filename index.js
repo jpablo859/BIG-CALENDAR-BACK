@@ -12,6 +12,9 @@ const PORT = process.env.PORT;
 //cors
 app.use(cors());
 
+//directorio público
+app.use( express.static('public') );
+
 //routes
 app.use(express.json());
 
